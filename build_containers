@@ -5,6 +5,6 @@ for d in $dir/docker/*
 do
     bn=$(basename $d)
     cp $d/Dockerfile .
-    docker build -t "lolisamurai:$bn" .
+    docker build -t "lolisamurai/$bn" .
     rm Dockerfile
 done
