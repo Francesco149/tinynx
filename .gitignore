@@ -1,0 +1,8 @@
+tags
+*.log
+*.tar.xz
+*.zip
+/nx
+*.obj
+*.exe
+*.swp
