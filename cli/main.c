@@ -331,8 +331,10 @@ int32_t ls(struct nx_file* file, struct nx_node* node)
     return 0;
 }
 
+#define mymax(a, b) ((a) > (b) ? (a) : (b))
 #define has_suffix(str, suffix) \
-    (!strcmp((str) + strlen(str) - strlen(suffix), (suffix)))
+    (!strcmp(mymax((str), (str) + strlen(str) - strlen(suffix)), \
+        (suffix)))
 
 internalfn
 int32_t run(int argc, char* argv[])
