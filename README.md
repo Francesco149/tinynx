@@ -22,6 +22,9 @@ curl https://raw.githubusercontent.com/Francesco149/tinynx/master/nx.c > nx.c
 read ```nx.c``` for examples and documentation of the api
 
 # command line interface
+![](https://i.imgur.com/Q8WL2Z2.gif)
+[video demonstration](https://streamable.com/19vik)
+
 download binaries from the releases section or build with
 ```./build``` (or ```.\build.bat``` on windows)
 
