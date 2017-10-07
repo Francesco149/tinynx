@@ -22,7 +22,7 @@ function Compile-And-Package
     Write-Host ""
     Write-Host "########################"
     Write-Host "> Packaging"
-    $folder = "nx-" + $(.\nx.exe -version) + "-windows-"
+    $folder = "tinynx-" + $(.\nx.exe -version) + "-windows-"
     $clout = &cl 2>&1
     cl
     "$clout" -match "Microsoft \(R\) C/C\+\+ Optimizing Compiler Version [0-9.]+ for ([a-zA-Z0-9\-_]+)" | Out-Null
