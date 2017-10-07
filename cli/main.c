@@ -1,6 +1,6 @@
 #define NX_IMPLEMENTATION
 #define NX_MONOLITHIC
-#include "nx.c"
+#include "../nx.c"
 
 #ifdef _WIN32
 #include <io.h> /* _mktemp */

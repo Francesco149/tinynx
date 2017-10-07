@@ -3,7 +3,7 @@
 dir=$(dirname $0)
 
 olddir=$(pwd)
-cd $dir
+cd $dir/cli
 git pull origin master
 
 echo -e "\nCompiling and Stripping"

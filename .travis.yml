@@ -12,5 +12,6 @@ matrix:
 install: true
 
 script:
+  - cd cli
   - ./build
   - ./nx -v

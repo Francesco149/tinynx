@@ -8,7 +8,7 @@ Get-ChildItem
 
 $dir = Split-Path -Parent $MyInvocation.MyCommand.Definition
 
-Push-Location "$dir"
+Push-Location "$dir"\cli
 git pull origin master
 
 function Compile-And-Package
