@@ -74,7 +74,7 @@ define toggles:
 
 #define NX_VERSION_MAJOR 1
 #define NX_VERSION_MINOR 0
-#define NX_VERSION_PATCH 2
+#define NX_VERSION_PATCH 3
 
 #ifndef NX_NOSTDINT
 #include <stdint.h>
@@ -484,7 +484,10 @@ void printgle(char const* msg)
     }
 
     fprintf(stderr, "%s: %s\n", msg, buf);
-    LocalFree(buf);
+
+    if (nchars) {
+        LocalFree(buf);
+    }
 }
 
 internalfn
