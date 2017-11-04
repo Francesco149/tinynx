@@ -74,7 +74,7 @@ define toggles:
 
 #define NX_VERSION_MAJOR 1
 #define NX_VERSION_MINOR 1
-#define NX_VERSION_PATCH 0
+#define NX_VERSION_PATCH 1
 
 #ifndef NX_NOSTDINT
 #include <stdint.h>
@@ -321,7 +321,7 @@ void LZ4_wild_copy(void* dstptr, void const* srcptr, void* dstend)
 
 internalfn
 int LZ4_decompress_safe(char const* src,
-    char* dst, int src_size, int output_size)
+    char* dst, uint32_t src_size, uint32_t output_size)
 {
     uint8_t const* ip = (uint8_t const*) src;
     uint8_t const* const iend = ip + src_size;
@@ -564,13 +564,15 @@ int32_t os_mmap(struct os_mapping* m, char const* path)
         return NX_EIO;
     }
 
-    m->base = mmap(0, st.st_size, PROT_READ, MAP_SHARED, m->fd, 0);
+    m->base = mmap(0, (size_t)st.st_size, PROT_READ, MAP_SHARED,
+        m->fd, 0);
+
     if (m->base == (void*)-1) {
         perror("mmap");
         return NX_EIO;
     }
 
-    m->size = st.st_size;
+    m->size = (uint64_t)st.st_size;
 
     return 0;
 }
@@ -750,7 +752,7 @@ int32_t nx_bitmap_at(struct nx_file* f, uint32_t id, uint8_t* buf,
 
     compressed_len = read4(p); p += 4;
     result = LZ4_decompress_safe((char const*)p, (char*)buf,
-        compressed_len, bufsize);
+        compressed_len, (uint32_t)bufsize);
     if (result < 0) {
         info("LZ4_decompress_safe failed with %d\n", result);
         return NX_EFORMAT;
