@@ -73,8 +73,8 @@ define toggles:
         implemented)                                             */
 
 #define NX_VERSION_MAJOR 1
-#define NX_VERSION_MINOR 1
-#define NX_VERSION_PATCH 1
+#define NX_VERSION_MINOR 2
+#define NX_VERSION_PATCH 0
 
 #ifndef NX_NOSTDINT
 #include <stdint.h>
@@ -250,10 +250,24 @@ uint16_t read2(uint8_t const* p) {
 }
 
 internalfn
+int32_t read2p(uint8_t const* p, uint16_t* pvalue)
+{
+    *pvalue = read2(p);
+    return 2;
+}
+
+internalfn
 uint32_t read4(uint8_t const* p)
 {
     return (uint32_t)(p[0] | p[1] << 8 |
         p[2] << 16 | p[3] << 24);
+}
+
+internalfn
+int32_t read4p(uint8_t const* p, uint32_t* pvalue)
+{
+    *pvalue = read4(p);
+    return 4;
 }
 
 internalfn
@@ -266,11 +280,25 @@ uint64_t read8(uint8_t const* p)
 }
 
 internalfn
+int32_t read8p(uint8_t const* p, uint64_t* pvalue)
+{
+    *pvalue = read8(p);
+    return 8;
+}
+
+internalfn
 double read_double(uint8_t const* p)
 {
     uint64_t v = read8(p);
     double* pd = (double*)&v;
     return *pd;
+}
+
+internalfn
+int32_t read_double_p(uint8_t const* p, double* pvalue)
+{
+    *pvalue = read_double(p);
+    return 8;
 }
 
 /* ------------------------------------------------------------- */
@@ -620,14 +648,14 @@ int32_t nx_map(struct nx_file* f, char const* path)
 
     p += 4;
 
-    f->nnodes = read4(p), p += 4;
-    f->nodes_offset = read8(p), p += 8;
-    f->nstrings = read4(p), p += 4;
-    f->strings_offset = read8(p), p += 8;
-    f->nbitmaps = read4(p), p += 4;
-    f->bitmaps_offset = read8(p), p += 8;
-    f->naudio = read4(p), p += 4;
-    f->audio_offset = read8(p), p += 8;
+    p += read4p(p, &f->nnodes);
+    p += read8p(p, &f->nodes_offset);
+    p += read4p(p, &f->nstrings);
+    p += read8p(p, &f->strings_offset);
+    p += read4p(p, &f->nbitmaps);
+    p += read8p(p, &f->bitmaps_offset);
+    p += read4p(p, &f->naudio);
+    p += read8p(p, &f->audio_offset);
 
     if (f->nodes_offset + f->nnodes * NX_NODE_SIZE > f->map.size ||
         f->strings_offset + f->nstrings * 8 > f->map.size ||
@@ -678,10 +706,10 @@ int32_t nx_node_at(struct nx_file* f, uint32_t id,
     p += f->nodes_offset + id * NX_NODE_SIZE;
 
     node->id = id;
-    node->name_id = read4(p); p += 4;
-    node->first_child_id = read4(p); p += 4;
-    node->nchildren = read2(p); p += 2;
-    node->type = read2(p); p += 2;
+    p += read4p(p, &node->name_id);
+    p += read4p(p, &node->first_child_id);
+    p += read2p(p, &node->nchildren);
+    p += read2p(p, &node->type);
     node->data = p;
 
     return 0;
@@ -703,7 +731,8 @@ int32_t nx_string_at_n(struct nx_file* f, uint32_t id, char* buf,
     p += f->strings_offset + id * 8;
     p = (uint8_t const*)f->map.base + read8(p);
 
-    len = mymin(bufsize - 1, read2(p)); p += 2;
+    p += read2p(p, &len);
+    len = mymin((uint16_t)(bufsize - 1), len);
     memcpy(buf, p, len);
     buf[len] = 0;
 
@@ -725,7 +754,7 @@ int32_t nx_string_at(struct nx_file* f, uint32_t id, char* buf)
     p += f->strings_offset + id * 8;
     p = (uint8_t const*)f->map.base + read8(p);
 
-    len = read2(p); p += 2;
+    p += read2p(p, &len);
     memcpy(buf, p, len);
     buf[len] = 0;
 
@@ -750,7 +779,7 @@ int32_t nx_bitmap_at(struct nx_file* f, uint32_t id, uint8_t* buf,
     p += f->bitmaps_offset + id * 8;
     p = (uint8_t const*)f->map.base + read8(p);
 
-    compressed_len = read4(p); p += 4;
+    p += read4p(p, &compressed_len);
     result = LZ4_decompress_safe((char const*)p, (char*)buf,
         compressed_len, (uint32_t)bufsize);
     if (result < 0) {
