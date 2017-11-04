@@ -74,7 +74,7 @@ define toggles:
 
 #define NX_VERSION_MAJOR 1
 #define NX_VERSION_MINOR 0
-#define NX_VERSION_PATCH 3
+#define NX_VERSION_PATCH 4
 
 #ifndef NX_NOSTDINT
 #include <stdint.h>
@@ -242,23 +242,23 @@ char const* nx_errstr(int32_t err)
 
 internalfn
 uint16_t read2(uint8_t const* p) {
-    return (uint16_t)p[0] | ((uint16_t)p[1] << 8);
+    return (uint16_t)(p[0] | p[1] << 8);
 }
 
 internalfn
 uint32_t read4(uint8_t const* p)
 {
-    return (uint32_t)p[0] | ((uint32_t)p[1] << 8) |
-        ((uint32_t)p[2] << 16) | ((uint32_t)p[3] << 24);
+    return (uint32_t)(p[0] | p[1] << 8 |
+        p[2] << 16 | p[3] << 24);
 }
 
 internalfn
 uint64_t read8(uint8_t const* p)
 {
-    return (uint64_t)p[0] | ((uint64_t)p[1] << 8) |
-        ((uint64_t)p[2] << 16) | ((uint64_t)p[3] << 24) |
-        ((uint64_t)p[4] << 32) | ((uint64_t)p[5] << 40) |
-        ((uint64_t)p[6] << 48) | ((uint64_t)p[7] << 56);
+    return (uint64_t)p[0] | (uint64_t)p[1] << 8 |
+        (uint64_t)p[2] << 16 | (uint64_t)p[3] << 24 |
+        (uint64_t)p[4] << 32 | (uint64_t)p[5] << 40 |
+        (uint64_t)p[6] << 48 | (uint64_t)p[7] << 56;
 }
 
 internalfn
