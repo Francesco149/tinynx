@@ -73,8 +73,8 @@ define toggles:
         implemented)                                             */
 
 #define NX_VERSION_MAJOR 1
-#define NX_VERSION_MINOR 0
-#define NX_VERSION_PATCH 4
+#define NX_VERSION_MINOR 1
+#define NX_VERSION_PATCH 0
 
 #ifndef NX_NOSTDINT
 #include <stdint.h>
@@ -179,6 +179,10 @@ int32_t nx_node_at(struct nx_file* f, uint32_t id,
 series of node names. returns 0 on success and < 0 on failure */
 nxapi int32_t nx_get(struct nx_file* f, char const* path,
     struct nx_node* node);
+
+/* same as nx_get but starts from node with id parent_id */
+nxapi int32_t nx_get_p(struct nx_file* f, char const* path,
+    uint32_t parent_id, struct nx_node* node);
 
 #define NX_NONE 0
 #define NX_INT64 1
@@ -826,10 +830,17 @@ nxapi
 int32_t nx_get(struct nx_file* f, char const* path,
     struct nx_node* node)
 {
+    return nx_get_p(f, path, 0, node);
+}
+
+nxapi
+int32_t nx_get_p(struct nx_file* f, char const* path,
+    uint32_t parent_id, struct nx_node* node)
+{
     int32_t res;
     struct nx_bsearch search;
 
-    res = nx_node_at(f, 0, node);
+    res = nx_node_at(f, parent_id, node);
     if (res < 0) {
         return res;
     }
