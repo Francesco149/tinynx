@@ -1,6 +1,6 @@
 #!/bin/sh
 
-cflags="-std=c89 -pedantic"
+cflags="-std=c89 -pedantic -fdiagnostics-color=always"
 cflags="$cflags -O3"
 cflags="$cflags -Wno-variadic-macros -Wno-long-long -Wall"
 cflags="$cflags -ffunction-sections -fdata-sections"
