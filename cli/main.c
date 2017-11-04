@@ -428,5 +428,8 @@ int main(int argc, char* argv[])
     }
 
     return 0;
+
+    (void)nx_string_at_n;
+    (void)read_double_p;
 }
 
