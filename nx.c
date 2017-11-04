@@ -74,7 +74,7 @@ define toggles:
 
 #define NX_VERSION_MAJOR 1
 #define NX_VERSION_MINOR 2
-#define NX_VERSION_PATCH 0
+#define NX_VERSION_PATCH 1
 
 #ifndef NX_NOSTDINT
 #include <stdint.h>

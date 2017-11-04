@@ -194,16 +194,17 @@ int32_t cat(struct nx_file* file, struct nx_node* node)
         uint8_t* pixels = 0;
         uint16_t width = read2(node->data + 4);
         uint16_t height = read2(node->data + 6);
-        int32_t uncompressed_size = width * height * 4;
+        uint32_t uncompressed_size =
+            (uint32_t)(width * height * 4);
 
-        pixels = (uint8_t*)malloc(uncompressed_size);
+        pixels = (uint8_t*)malloc((size_t)uncompressed_size);
         if (!pixels) {
             res = NX_EOOM;
             break;
         }
 
         res = nx_bitmap_at(file, read4(node->data), pixels,
-            uncompressed_size);
+            (int32_t)uncompressed_size);
         if (res < 0) {
             break;
         }
@@ -277,7 +278,7 @@ int32_t ls(struct nx_file* file, struct nx_node* node)
 {
     int32_t res;
 
-    int32_t i;
+    uint32_t i;
     struct nx_node child;
 
     for (i = 0; i < node->nchildren; ++i)
