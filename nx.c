@@ -74,7 +74,7 @@ define toggles:
 
 #define NX_VERSION_MAJOR 1
 #define NX_VERSION_MINOR 2
-#define NX_VERSION_PATCH 2
+#define NX_VERSION_PATCH 3
 
 #ifndef NX_NOSTDINT
 #include <stdint.h>
@@ -608,7 +608,7 @@ int32_t os_mmap(struct os_mapping* m, char const* path)
 nxapi
 void os_munmap(struct os_mapping* m)
 {
-    munmap(m->base, m->size);
+    munmap(m->base, (size_t)m->size);
     close(m->fd);
     m->base = 0;
     m->size = 0;
